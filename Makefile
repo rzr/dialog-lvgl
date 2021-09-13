@@ -10,7 +10,7 @@ default: all
 lvgl?=lvgl-sdl
 project?=dialog-${lvgl}
 exe?=${project}
-sysroot?=
+sysroot?=${CURDIR}/tmp/sysroot
 prefix?=/usr/local
 includedir?=${prefix}/include
 base_bindir?=/bin
@@ -29,7 +29,7 @@ height=${width}
 
 # TODO: Pin upstream once released
 lvgl_url?=file:///home/rzr/mnt/lv_sim_vscode_sdl
-lvgl_branch?=sandbox/rzr/review/master
+#lvgl_branch?=sandbox/rzr/review/master
 lvgl_branch?=sandbox/rzr/master
 lvgl_org?=astrolabe-coop
 
@@ -40,6 +40,7 @@ lvgl_branch?=master
 depsdir?=tmp/deps
 sudo?=
 export sudo
+
 
 help:
 	@echo "# Usage:"
@@ -63,6 +64,8 @@ ${libstatic}:
 ${exe}: ${objs} ${libstatic}
 	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
 
+exe: ${exe}
+
 clean:
 	rm -vf ${exe} *.o */*.o
 
@@ -73,12 +76,12 @@ run: ${exe}
 	${<D}/${<F}
 
 install: ${exe}
-	install -d ${DESTDIR}/${bindir}
-	install $< ${DESTDIR}/${bindir}/${project}
+	install -d "${DESTDIR}/${bindir}"
+	install $< "${DESTDIR}/${bindir}/${project}"
 
 
 lib/%: ${depsdir}/${lvgl}
-	${MAKE} -C $< ${@F} DESTDIR=${sysroot}
+	${MAKE} -C $< ${@F} DESTDIR="${sysroot}"
 
 lib: lib/install
 	ls ${lib}
@@ -87,5 +90,11 @@ ${depsdir}/${lvgl}:
 	mkdir -p ${@D}
 	git clone --depth 1 --recursive ${lvgl_url} --branch ${lvgl_branch} $@
 
-style: extra/scripts/code-format.cfg
+format: extra/scripts/code-format.cfg
 	astyle --options=$< "./src/*.c,.h"
+
+
+demo/%:
+	PATH=${PATH}:. ${@F}
+
+demo: ${exe} demo/${exe}
