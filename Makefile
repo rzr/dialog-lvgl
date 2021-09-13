@@ -64,7 +64,7 @@ ${exe}: ${objs} ${libstatic}
 	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
 
 clean:
-	rm -vf ${exe} *.o
+	rm -vf ${exe} *.o */*.o
 
 cleanall: clean
 	rm -rf tmp
@@ -86,3 +86,6 @@ lib: lib/install
 ${depsdir}/${lvgl}:
 	mkdir -p ${@D}
 	git clone --depth 1 --recursive ${lvgl_url} --branch ${lvgl_branch} $@
+
+style: extra/scripts/code-format.cfg
+	astyle --options=$< "./src/*.c,.h"
