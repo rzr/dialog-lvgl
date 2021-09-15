@@ -9,6 +9,7 @@ default: all
 
 lvgl?=lvgl-sdl
 project?=dialog-${lvgl}
+url?=https://git.ostc-eu.org/rzr/dialog-lvgl
 exe?=${project}
 sysroot?=${CURDIR}/tmp/sysroot
 prefix?=/usr/local
@@ -21,7 +22,7 @@ libstatic?=${sysroot}/${libdir}/lib${lvgl}.a
 srcs?=$(wildcard src/*.c | sort)
 objs?=${srcs:.c=.o}
 CFLAGS+=-I${sysroot}${includedir}/${lvgl}/
-LDLIBS+=$(shell pkg-config --libs sdl2)
+LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
 
 V?=1
 width?=42
@@ -40,6 +41,7 @@ export sudo
 
 
 help:
+	@echo "# URL: ${url}"
 	@echo "# Usage:"
 	@echo "#  make run # will run demo"
 	@echo "#  make lib # will download build and install lib"
@@ -110,3 +112,33 @@ demo/%:
 	@echo ""
 
 demo: ${exe} demo/${exe}
+
+setup/debian:
+# /etc/debian_version
+	-${sudo} apt-get update -y 
+	${sudo} apt-get install -y \
+		gcc \
+		git \
+		libsdl2-dev \
+		make \
+		pkg-config \
+		sudo
+
+/etc/debian_version:
+	@echo "error: distro not supported please file a bug: ${url}"
+
+setup: setup/debian
+
+docker_image?=${project}
+docker_tag?=${project}
+
+docker/build: Dockerfile
+	docker build -t "${docker_tag}" "."
+	docker create --name "${docker_image}" "${docker_tag}"
+
+docker/run:
+	xhost + localhost
+	docker run \
+		-e DISPLAY="${DISPLAY}" \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		"${docker_image}"
