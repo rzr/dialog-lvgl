@@ -99,5 +99,8 @@ demo/%:
 	@echo "info: yesno: check exit code {0,2}"
 	PATH=${PATH}:. ${@F} --yesno "Confirm" ${width} ${height}
 	@echo ""
+	@echo "info: inputbox: check stdout value"
+	PATH=${PATH}:. ${@F} --inputbox "Input" ${width} ${height}
+	@echo ""
 
 demo: ${exe} demo/${exe}
