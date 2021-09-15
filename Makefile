@@ -96,5 +96,8 @@ demo/%:
 	@echo ""
 	PATH=${PATH}:. ${@F} --msgbox "$@" ${width} ${height}
 	@echo ""
+	@echo "info: yesno: check exit code {0,2}"
+	PATH=${PATH}:. ${@F} --yesno "Confirm" ${width} ${height}
+	@echo ""
 
 demo: ${exe} demo/${exe}

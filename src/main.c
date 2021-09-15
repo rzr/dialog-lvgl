@@ -13,6 +13,7 @@
 #include <lv_drivers/indev/keyboard.h>
 
 #include "msgbox.h"
+#include "yesno.h"
 
 
 char * usage(int argc, char ** argv)
@@ -25,6 +26,7 @@ Description:\n\
 \n\
 Commands: \n\
  --msgbox \"message\" 0 0\n\
+ --yesno  \"message\" 0 0\n\
 \n\
 ", argv[0]);
 }
@@ -53,6 +55,9 @@ void ui_init(int argc, char ** argv)
         }
         else if(strcmp(argv[1], "--msgbox") == 0) {
             msgbox_ui_init(argc, argv);
+        }
+        else if(strcmp(argv[1], "--yesno") == 0) {
+            yesno_ui_init(argc, argv);
         }
         else {
             default_ui_init(argc, argv);
