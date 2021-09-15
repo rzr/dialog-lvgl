@@ -27,15 +27,12 @@ V?=1
 width?=42
 height=${width}
 
-# TODO: Pin upstream once released
-lvgl_url?=file:///home/rzr/mnt/lv_sim_vscode_sdl
-#lvgl_branch?=sandbox/rzr/review/master
+# TODO: Pin upstream URL once released
 lvgl_branch?=sandbox/rzr/master
+lvgl_branch?=master
 lvgl_org?=astrolabe-coop
-
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lv_sim_vscode_sdl
-lvgl_branch?=master
 
 depsdir?=tmp/deps
 sudo?=
