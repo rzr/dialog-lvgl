@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: Huawei Inc.
+# SPDX-License-Identifier: MIT
+#.dockerignore
+Dockerfile
+.git/
+
+# SPDX-FileCopyrightText: Huawei Inc.
+# SPDX-License-Identifier: MIT
+# .gitignore
+
+**/tmp/
+*.tmp
+*~
+*.o
+
+dialog-*
