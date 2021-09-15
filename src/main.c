@@ -15,6 +15,7 @@
 #include "msgbox.h"
 #include "yesno.h"
 #include "inputbox.h"
+#include "checklist.h"
 
 
 char * usage(int argc, char ** argv)
@@ -29,6 +30,7 @@ Commands: \n\
  --msgbox \"message\" 0 0\n\
  --yesno  \"message\" 0 0\n\
  --inputbox \"message\" 0 0\n\
+ --checklist  \"message\" 0 0 0 \"keyword1\" \"Description1\" \"ON\" ... \n\
 \n\
 ", argv[0]);
 }
@@ -63,6 +65,9 @@ void ui_init(int argc, char ** argv)
         }
         else if(strcmp(argv[1], "--inputbox") == 0) {
             inputbox_ui_init(argc, argv);
+        }
+        else if(strcmp(argv[1], "--checklist") == 0) {
+            checklist_ui_init(argc, argv);
         }
         else {
             default_ui_init(argc, argv);

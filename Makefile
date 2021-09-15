@@ -102,5 +102,11 @@ demo/%:
 	@echo "info: inputbox: check stdout value"
 	PATH=${PATH}:. ${@F} --inputbox "Input" ${width} ${height}
 	@echo ""
+	@echo "info: checklist: check stdout values"
+	PATH=${PATH}:. ${@F} --checklist "Choose an option" ${width} ${height} 2 \
+"01" "First" OFF \
+"02" "Second" ON \
+"03" "Third"  OFF \
+	@echo ""
 
 demo: ${exe} demo/${exe}
