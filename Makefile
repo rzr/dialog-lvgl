@@ -93,5 +93,8 @@ format: extra/scripts/code-format.cfg
 
 demo/%:
 	PATH=${PATH}:. ${@F}
+	@echo ""
+	PATH=${PATH}:. ${@F} --msgbox "$@" ${width} ${height}
+	@echo ""
 
 demo: ${exe} demo/${exe}

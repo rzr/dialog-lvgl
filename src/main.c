@@ -12,6 +12,8 @@
 #include <lv_drivers/indev/mouse.h>
 #include <lv_drivers/indev/keyboard.h>
 
+#include "msgbox.h"
+
 
 char * usage(int argc, char ** argv)
 {
@@ -20,6 +22,9 @@ char * usage(int argc, char ** argv)
 Description:\n\
  Basic UI utility to be used in scripts.\n\
  Inspired by ncurses' dialog, implemented using LVGL\n\
+\n\
+Commands: \n\
+ --msgbox \"message\" 0 0\n\
 \n\
 ", argv[0]);
 }
@@ -45,6 +50,9 @@ void ui_init(int argc, char ** argv)
     if((argc >= 1) && (argv[1])) {
         if(strcmp(argv[1], "--help") == 0) {
             usage(argc, argv);
+        }
+        else if(strcmp(argv[1], "--msgbox") == 0) {
+            msgbox_ui_init(argc, argv);
         }
         else {
             default_ui_init(argc, argv);
