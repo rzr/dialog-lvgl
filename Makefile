@@ -76,8 +76,8 @@ run: ${exe}
 	${<D}/${<F}
 
 install: ${exe}
-	install -d "${DESTDIR}/${bindir}"
-	install $< "${DESTDIR}/${bindir}/${project}"
+	${sudo} install -d "${DESTDIR}/${bindir}"
+	${sudo} install $< "${DESTDIR}/${bindir}/${project}"
 
 
 lib/%: ${depsdir}/${lvgl}
