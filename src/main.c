@@ -38,12 +38,15 @@ Commands: \n\
 
 void default_ui_init(int argc, char ** argv)
 {
-    char * text = "Basic UI utility to be used in scripts.\n\
-Inspired by ncurses dialog, implemented using LVGL\n\
-For help run again with '--help' command option";
-    lv_obj_t * label1 = lv_label_create(lv_scr_act());
-    lv_label_set_text(label1, text);
     usage(argc, argv);
+    char * msgbox_argv[] = {
+        argv[0],
+        "--msgbox",
+        "Basic UI utility to be used in scripts.\n\
+Inspired by ncurses dialog, implemented using LVGL\n\
+For help run again with '--help' command option"
+    };
+    msgbox_ui_init(3, msgbox_argv);
 }
 
 
@@ -54,10 +57,7 @@ void ui_init(int argc, char ** argv)
                           LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER,
                           LV_FLEX_ALIGN_CENTER);
     if((argc >= 1) && (argv[1])) {
-        if(strcmp(argv[1], "--help") == 0) {
-            usage(argc, argv);
-        }
-        else if(strcmp(argv[1], "--msgbox") == 0) {
+        if(strcmp(argv[1], "--msgbox") == 0) {
             msgbox_ui_init(argc, argv);
         }
         else if(strcmp(argv[1], "--yesno") == 0) {
@@ -113,6 +113,11 @@ static void hal_init(void)
 
 int main(int argc, char ** argv)
 {
+    if((argc > 1) && strcmp(argv[1], "--help") == 0) {
+        usage(argc, argv);
+        return 0;
+    }
+
     lv_init();
     hal_init();
     ui_init(argc, argv);
