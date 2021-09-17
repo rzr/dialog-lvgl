@@ -27,6 +27,7 @@ LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
 V?=1
 width?=42
 height=${width}
+depth?=1
 
 # TODO: Pin upstream URL once released
 lvgl_branch?=sandbox/rzr/master
@@ -92,31 +93,46 @@ ${depsdir}/${lvgl}:
 format: extra/scripts/code-format.cfg
 	astyle --options=$< "./src/*.c,.h"
 
-
-demo/%:
+run/%:
 	PATH=${PATH}:. ${@F}
 	@echo ""
+
+msgbox/%:
 	PATH=${PATH}:. ${@F} --msgbox "$@" ${width} ${height}
 	@echo ""
+
+yesno/%:
 	@echo "info: yesno: check exit code {0,2}"
 	PATH=${PATH}:. ${@F} --yesno "Confirm" ${width} ${height}
 	@echo ""
+
+inputbox/%:
 	@echo "info: inputbox: check stdout value"
 	PATH=${PATH}:. ${@F} --inputbox "Input" ${width} ${height}
 	@echo ""
+
+checklist/%:
 	@echo "info: checklist: check stdout values"
-	PATH=${PATH}:. ${@F} --checklist "Choose an option" ${width} ${height} 2 \
+	PATH=${PATH}:. ${@F} --checklist "$@: Choose an option" ${width} ${height} ${depth} \
 "01" "First" OFF \
 "02" "Second" ON \
-"03" "Third"  OFF \
+"03" "Third"  OFF
 	@echo ""
 
-demo: ${exe} demo/${exe}
+
+demo/%: run/% msgbox/% yesno/% inputbox/% checklist/%
+	-@sync
+
+dialog: demo/dialog
+	-@sync
+
+demo: ${exe} demo/${exe} demo/dialog
 
 setup/debian:
 # /etc/debian_version
 	-${sudo} apt-get update -y 
 	${sudo} apt-get install -y \
+		dialog \
 		gcc \
 		git \
 		libsdl2-dev \
