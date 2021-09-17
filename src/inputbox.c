@@ -8,7 +8,7 @@
 #include <lvgl/lvgl.h>
 #include "inputbox.h"
 
-const char * inputbox_value = 0;
+const char * inputbox_value = "";
 
 static void ok_inputbox_event_handler(lv_event_t * e)
 {
