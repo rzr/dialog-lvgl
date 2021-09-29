@@ -47,7 +47,7 @@ depsdir?=tmp/deps
 sudo?=
 export sudo
 
-lvgl_driver?=sdl
+lvgl_driver?=wayland
 
 CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1
 
