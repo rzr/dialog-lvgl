@@ -4,13 +4,13 @@
 // SPDX-License-Identifier: MIT
 
 #define _DEFAULT_SOURCE /* needed for usleep() */
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include <lvgl/lvgl.h>
-#include <lv_drivers/display/monitor.h>
-#include <lv_drivers/indev/mouse.h>
-#include <lv_drivers/indev/keyboard.h>
+
+static void hal_init(void); /* see {sdl,...}.c */
 
 #include "msgbox.h"
 #include "yesno.h"
@@ -78,37 +78,6 @@ void ui_init(int argc, char ** argv)
     }
 }
 
-
-static void hal_init(void)
-{
-    monitor_init();
-    mouse_init();
-
-    lv_disp_t * disp = lv_disp_get_default();
-    lv_theme_t * th = lv_theme_default_init(disp,
-                                            lv_palette_main(LV_PALETTE_BLUE),
-                                            lv_palette_main(LV_PALETTE_RED),
-                                            LV_THEME_DEFAULT_DARK,
-                                            LV_FONT_DEFAULT);
-    lv_disp_set_theme(disp, th);
-
-    lv_group_t * g = lv_group_create();
-    lv_group_set_default(g);
-
-    static lv_indev_drv_t indev_drv_1;
-    lv_indev_drv_init(&indev_drv_1);
-    indev_drv_1.type = LV_INDEV_TYPE_POINTER;
-    indev_drv_1.read_cb = mouse_read;
-    lv_indev_t * mouse_indev = lv_indev_drv_register(&indev_drv_1);
-
-    keyboard_init();
-    static lv_indev_drv_t indev_drv_2;
-    lv_indev_drv_init(&indev_drv_2);
-    indev_drv_2.type = LV_INDEV_TYPE_KEYPAD;
-    indev_drv_2.read_cb = keyboard_read;
-    lv_indev_t * kb_indev = lv_indev_drv_register(&indev_drv_2);
-    lv_indev_set_group(kb_indev, g);
-}
 
 
 int main(int argc, char ** argv)

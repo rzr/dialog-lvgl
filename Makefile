@@ -7,9 +7,12 @@
 default: all
 	-@sync
 
-lvgl?=lvgl-sdl
+lvgl?=lvgl
 project?=dialog-${lvgl}
 url?=https://git.ostc-eu.org/rzr/dialog-lvgl
+
+cmake_options?=-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+
 exe?=${project}
 sysroot?=${CURDIR}/tmp/sysroot
 prefix?=/usr/local
@@ -18,50 +21,58 @@ base_bindir?=/bin
 base_libdir?=/lib
 bindir?=${prefix}/${base_bindir}
 libdir?=${prefix}/${base_libdir}
-libstatic?=${sysroot}/${libdir}/lib${lvgl}.a
 srcs?=$(wildcard src/*.c | sort)
 objs?=${srcs:.c=.o}
-CFLAGS+=-I${sysroot}${includedir}/${lvgl}/
-LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
-
+CFLAGS+=-I${sysroot}${includedir}/
+CFLAGS+=-I${sysroot}${includedir}/lvgl
+CFLAGS+=-I${sysroot}${includedir}/lvgl/lv_drivers
+LDLIBS+=-L${sysroot}/${libdir}
+LDLIBS+=-llv_drivers
+LDLIBS+=-llvgl
 V?=1
 width?=42
 height=${width}
 depth?=1
 
 # TODO: Pin upstream URL once released
-lvgl_branch?=sandbox/rzr/master
+lvgl_branch?=sandbox/rzr/review/master
 lvgl_branch?=master
 lvgl_org?=astrolabe-coop
 lvgl_org?=lvgl
-lvgl_url?=https://github.com/${lvgl_org}/lv_sim_vscode_sdl
+lvgl_url?=https://github.com/${lvgl_org}/lvgl
+lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
+lv_drivers_branch?=${lvgl_branch}
 
 depsdir?=tmp/deps
 sudo?=
 export sudo
 
+lvgl_driver?=sdl
+
+
+CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1
+
+ifeq (sdl, ${lvgl_driver})
+CFLAGS+=-DUSE_SDL=1
+CFLAGS+=$(shell pkg-config --cflags sdl2 2> /dev/null || echo -- "")
+LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
+endif
 
 help:
 	@echo "# URL: ${url}"
 	@echo "# Usage:"
+	@echo "#  make deps # will download build in depsdir and install to sysroot"
 	@echo "#  make run # will run demo"
-	@echo "#  make lib # will download build and install lib"
 	@echo "# Env:"
+	@echo "#  depsdir=${depsdir}"
 	@echo "#  sysroot=${sysroot}"
-	@echo "#  libexecdir=${libexecdir}"
-	@echo "#  libstatic=${libstatic}"
 	@echo "#  libdir=${libdir}"
 	@echo "#  includedir=${includedir}"
 
-all: help ${exe} ${libstatic}
+all: help ${exe}
 	ls ${exe}
 
-${libstatic}:
-	@echo "error: $@ missing from ${sysroot}"
-	@echo "error: Run make lib to build and install it"
-	@exit 1
-
-${exe}: ${objs} ${libstatic}
+${exe}: ${objs}
 	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
 
 exe: ${exe}
@@ -80,11 +91,46 @@ install: ${exe}
 	${sudo} install $< "${DESTDIR}/${bindir}/${project}"
 
 
-lib/%: ${depsdir}/${lvgl}
-	${MAKE} -C $< ${@F} DESTDIR="${sysroot}"
+deps/lvgl: ${depsdir}/${lvgl}/lv_conf.h
+	cd ${<D} \
+	  && export CFLAGS="${CFLAGS}" \
+	  && cmake ${cmake_options} . \
+	  && make \
+	  && make install DESTDIR=${sysroot}
 
-lib: lib/install
-	ls ${lib}
+${depsdir}/${lvgl}/lv_conf.h: ${depsdir}/${lvgl}/lv_conf_template.h
+	sed \
+	    -e 's|#if 0 .*Set it to "1" to enable the content.*|#if 1 // Enabled manualy|g' \
+	< $< > $@
+
+${depsdir}/${lvgl}/lv_conf_template.h:
+	@mkdir -p ${@D}
+	git clone --depth 1 --recursive ${lvgl_url} --branch ${lvgl_branch} ${@D}
+
+deps/lv_drivers: ${depsdir}/lv_drivers/lv_drv_conf.h
+	cd ${<D} \
+	  && export CFLAGS="${CFLAGS} -DLV_CONF_INCLUDE_SIMPLE=1\
+	    -I${sysroot}/${includedir}/lvgl \
+	    -I${sysroot}/${includedir}/ " \
+	  && cmake ${cmake_options} . \
+	  && make \
+	  && make install DESTDIR=${sysroot}
+
+${depsdir}/lv_drivers/lv_drv_conf.h: ${depsdir}/lv_drivers/lv_drv_conf_template.h
+	sed \
+	    -e 's|#if 0 .*Set it to "1" to enable the content.*|#if 1 // Enabled manualy|g' \
+	< $< > $@
+
+${depsdir}/lv_drivers/lv_drv_conf_template.h:
+	@mkdir -p ${@D}
+	git clone --depth 1 --recursive ${lv_drivers_url} --branch ${lv_drivers_branch} ${@D}
+
+
+deps: deps/lvgl deps/lv_drivers
+	@-sync
+
+lib: deps
+	@-sync
 
 ${depsdir}/${lvgl}:
 	mkdir -p ${@D}
@@ -128,9 +174,8 @@ dialog: demo/dialog
 
 demo: ${exe} demo/${exe} demo/dialog
 
-setup/debian:
-# /etc/debian_version
-	-${sudo} apt-get update -y 
+setup/debian: /etc/debian_version
+	-${sudo} apt-get update -y
 	${sudo} apt-get install -y \
 		dialog \
 		gcc \
