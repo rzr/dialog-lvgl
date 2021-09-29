@@ -49,7 +49,6 @@ export sudo
 
 lvgl_driver?=sdl
 
-
 CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1
 
 ifeq (sdl, ${lvgl_driver})
@@ -57,6 +56,16 @@ CFLAGS+=-DUSE_SDL=1
 CFLAGS+=$(shell pkg-config --cflags sdl2 2> /dev/null || echo -- "")
 LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
 endif
+
+ifeq (wayland, ${lvgl_driver})
+CFLAGS+=-DUSE_WAYLAND=1
+CFLAGS+=$(shell pkg-config --cflags wayland-client 2> /dev/null || echo -- "")
+CFLAGS+=$(shell pkg-config --cflags xkbcommon 2> /dev/null || echo -- "")
+LDLIBS+=-pthread
+LDLIBS+=$(shell pkg-config --libs wayland-client 2> /dev/null || echo -- "-lwayland-client")
+LDLIBS+=$(shell pkg-config --libs xkbcommon 2> /dev/null || echo -- "-lxkbcommon")
+endif
+
 
 help:
 	@echo "# URL: ${url}"
