@@ -16,7 +16,6 @@ static int checklist_model_size = 0;
 static void ok_checklist_event_handler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * obj = lv_event_get_target(e);
     if(code == LV_EVENT_CLICKED) {
         for(int i = 0; i < checklist_model_size; i++) {
             lv_obj_t * cb = checklist_model[i];
@@ -32,7 +31,6 @@ static void ok_checklist_event_handler(lv_event_t * e)
 static void cancel_checklist_event_handler(lv_event_t * e)
 {
     lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * obj = lv_event_get_target(e);
     if(code == LV_EVENT_CLICKED) {
         exit(2);
     }
