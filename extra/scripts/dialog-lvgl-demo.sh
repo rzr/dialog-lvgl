@@ -14,7 +14,7 @@ usage_()
     cat<<EOF
 Usage:
 $0 # to run default dialog : $exe
-$0 dialog-lvgl-sdl # to use custom one
+$0 dialog-lvgl # to use custom one
 
 More:
 $url
