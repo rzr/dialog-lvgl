@@ -12,6 +12,7 @@ project?=dialog-${lvgl}
 url?=https://git.ostc-eu.org/rzr/dialog-lvgl
 
 cmake_options?=-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+cmake_options+=-Dinstall:BOOL=ON
 
 exe?=${project}
 sysroot?=${CURDIR}/tmp/sysroot
@@ -35,9 +36,7 @@ height=${width}
 depth?=1
 
 # TODO: Pin upstream URL once released
-lvgl_branch?=sandbox/rzr/review/master
 lvgl_branch?=master
-lvgl_org?=astrolabe-coop
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
