@@ -23,6 +23,7 @@ base_libdir?=/lib
 bindir?=${prefix}/${base_bindir}
 libdir?=${prefix}/${base_libdir}
 srcs?=$(wildcard src/*.c | sort)
+srcs+=src/drivers/${lvgl_driver}.c
 objs?=${srcs:.c=.o}
 CFLAGS+=-I${sysroot}${includedir}/
 CFLAGS+=-I${sysroot}${includedir}/lvgl
@@ -86,7 +87,7 @@ ${exe}: ${objs}
 exe: ${exe}
 
 clean:
-	rm -vf ${exe} *.o */*.o
+	rm -vf ${exe} *.o */*.o */*/*.o
 
 cleanall: clean
 	rm -rf tmp

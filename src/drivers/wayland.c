@@ -11,7 +11,7 @@
 #include <lv_drivers/wayland/wayland.h>
 
 
-static void* tick_thread(void * data)
+static void * tick_thread(void * data)
 {
     (void) data;
     while(true) {
