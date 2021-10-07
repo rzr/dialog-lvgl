@@ -57,7 +57,7 @@ void hal_init(void)
     static lv_indev_drv_t touch_drv;
     lv_indev_drv_init(&touch_drv);
     touch_drv.type = LV_INDEV_TYPE_POINTER;
-    touch_drv.read_cb = wayland_pointer_read;
+    touch_drv.read_cb = wayland_touch_read;
     lv_indev_t * touch_indev = lv_indev_drv_register(&touch_drv);
 
     static lv_indev_drv_t keyboard_drv;
