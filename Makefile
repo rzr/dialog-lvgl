@@ -23,6 +23,7 @@ base_libdir?=/lib
 bindir?=${prefix}/${base_bindir}
 libdir?=${prefix}/${base_libdir}
 srcs?=$(wildcard src/*.c | sort)
+srcs+=$(wildcard src/widgets/*.c | sort)
 srcs+=src/drivers/${lvgl_driver}.c
 objs?=${srcs:.c=.o}
 CFLAGS+=-I${sysroot}${includedir}/
