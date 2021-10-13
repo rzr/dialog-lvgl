@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 url="https://git.ostc-eu.org/rzr/dialog-lvgl"
-exe=dialog
+exe=dialog-lvgl
 width=42
 height=42
 depth=42
