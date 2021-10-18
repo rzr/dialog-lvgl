@@ -119,6 +119,7 @@ ${depsdir}/${lvgl}/lv_conf_template.h:
 	git clone --depth 1 --recursive ${lvgl_url} --branch ${lvgl_branch} ${@D}
 
 deps/lv_drivers: ${depsdir}/lv_drivers/lv_drv_conf.h
+	ls $<
 	cd ${<D} \
 	  && export CFLAGS="${CFLAGS} -DLV_CONF_INCLUDE_SIMPLE=1\
 	    -I${sysroot}/${includedir}/lvgl \
