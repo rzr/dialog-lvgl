@@ -124,7 +124,7 @@ deps/lv_drivers: ${depsdir}/lv_drivers/lv_drv_conf.h
 	  && export CFLAGS="${CFLAGS} -DLV_CONF_INCLUDE_SIMPLE=1\
 	    -I${sysroot}/${includedir}/lvgl \
 	    -I${sysroot}/${includedir}/ \
-	    -I${<D}"
+	    -I${<D}" \
 	  && cmake ${cmake_options} . \
 	  && make \
 	  && make install DESTDIR=${sysroot}
