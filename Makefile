@@ -22,7 +22,7 @@ base_bindir?=/bin
 base_libdir?=/lib
 bindir?=${prefix}/${base_bindir}
 libdir?=${prefix}/${base_libdir}
-srcs?=$(wildcard src/*.c | sort)
+srcs?=src/main_linux.c
 srcs+=$(wildcard src/widgets/*.c | sort)
 srcs+=src/drivers/${lvgl_driver}.c
 objs?=${srcs:.c=.o}
