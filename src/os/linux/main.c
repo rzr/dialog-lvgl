@@ -12,10 +12,10 @@
 
 static void hal_init(void); /* see {sdl,...}.c */
 
-#include "widgets/msgbox.h"
-#include "widgets/yesno.h"
-#include "widgets/inputbox.h"
-#include "widgets/checklist.h"
+#include "../../widgets/msgbox.h"
+#include "../../widgets/yesno.h"
+#include "../../widgets/inputbox.h"
+#include "../../widgets/checklist.h"
 
 
 char * usage(int argc, char ** argv)
