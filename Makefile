@@ -43,7 +43,9 @@ lvgl_branch?=sandbox/rzr/latest/master
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
+lv_drivers_branch?=${lvgl_branch}
 lv_drivers_branch?=master
+
 
 depsdir?=tmp/deps
 sudo?=
