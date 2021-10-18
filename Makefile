@@ -43,8 +43,10 @@ depth?=1
 lvgl_branch?=master
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
+lvgl_revision?=7b7bed37d3e937c59ec99fccba58774fbf9f1930
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
 lv_drivers_branch?=${lvgl_branch}
+lv_drivers_revision?=419a757c23aaa67c676fe3a2196d64808fcf2254
 
 depsdir?=tmp/deps
 sudo?=
@@ -117,13 +119,16 @@ ${depsdir}/${lvgl}/lv_conf.h: ${depsdir}/${lvgl}/lv_conf_template.h
 
 ${depsdir}/${lvgl}/lv_conf_template.h:
 	@mkdir -p ${@D}
-	git clone --depth 1 --recursive ${lvgl_url} --branch ${lvgl_branch} ${@D}
+	git clone --recursive ${lvgl_url} --branch ${lvgl_branch} ${@D}
+	cd ${@D} && git reset --hard ${lvgl_revision}
 
 deps/lv_drivers: ${depsdir}/lv_drivers/lv_drv_conf.h
+	ls $<
 	cd ${<D} \
 	  && export CFLAGS="${CFLAGS} -DLV_CONF_INCLUDE_SIMPLE=1\
 	    -I${sysroot}/${includedir}/lvgl \
-	    -I${sysroot}/${includedir}/ " \
+	    -I${sysroot}/${includedir}/ \
+	    -I${<D}" \
 	  && cmake ${cmake_options} . \
 	  && make \
 	  && make install DESTDIR=${sysroot}
@@ -135,7 +140,8 @@ ${depsdir}/lv_drivers/lv_drv_conf.h: ${depsdir}/lv_drivers/lv_drv_conf_template.
 
 ${depsdir}/lv_drivers/lv_drv_conf_template.h:
 	@mkdir -p ${@D}
-	git clone --depth 1 --recursive ${lv_drivers_url} --branch ${lv_drivers_branch} ${@D}
+	git clone --recursive ${lv_drivers_url} --branch ${lv_drivers_branch} ${@D}
+	cd ${@D} && git reset --hard ${lv_drivers_revision}
 
 
 deps: deps/lvgl deps/lv_drivers
