@@ -110,7 +110,7 @@ deps/lvgl: ${depsdir}/${lvgl}/lv_conf.h
 
 ${depsdir}/${lvgl}/lv_conf.h: ${depsdir}/${lvgl}/lv_conf_template.h
 	sed \
-	    -e 's|#if 0 .*Set it to "1" to enable the content.*|#if 1 // Enabled manualy|g' \
+	    -e 's|#if 0 .*Set it to "1" to enable.*|#if 1 // Enabled manualy|g' \
 	< $< > $@
 
 ${depsdir}/${lvgl}/lv_conf_template.h:
@@ -128,7 +128,7 @@ deps/lv_drivers: ${depsdir}/lv_drivers/lv_drv_conf.h
 
 ${depsdir}/lv_drivers/lv_drv_conf.h: ${depsdir}/lv_drivers/lv_drv_conf_template.h
 	sed \
-	    -e 's|#if 0 .*Set it to "1" to enable the content.*|#if 1 // Enabled manualy|g' \
+	    -e 's|#if 0 .*Set it to "1" to enable.*|#if 1 // Enabled manualy|g' \
 	< $< > $@
 
 ${depsdir}/lv_drivers/lv_drv_conf_template.h:
