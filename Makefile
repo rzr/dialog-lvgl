@@ -39,7 +39,8 @@ depth?=1
 
 # TODO: Pin upstream URL once released
 lvgl_org?=astrolabe-coop
-lvgl_branch?=sandbox/rzr/latest/master
+lvgl_branch?=sandbox/rzr/v7/master
+lvgl_branch?=master
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
