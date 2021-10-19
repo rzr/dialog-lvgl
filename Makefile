@@ -24,7 +24,6 @@ bindir?=${prefix}/${base_bindir}
 libdir?=${prefix}/${base_libdir}
 os?=linux
 srcs+=$(wildcard src/os/${os}/*.c | sort)
-srcs+=$(wildcard src/widgets/*.c | sort)
 srcs+=src/drivers/${lvgl_driver}.c
 objs?=${srcs:.c=.o}
 CFLAGS+=-Isrc
@@ -40,19 +39,19 @@ height=${width}
 depth?=1
 
 # TODO: Pin upstream URL once released
-lvgl_branch?=release/v7
+lvgl_branch?=master
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
-lvgl_revision?=${lvgl_branch}
+lvgl_revision?=7b7bed37d3e937c59ec99fccba58774fbf9f1930
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
 lv_drivers_branch?=${lvgl_branch}
-lv_drivers_revision?=${lv_driver_branch}
+lv_drivers_revision?=419a757c23aaa67c676fe3a2196d64808fcf2254
 
 depsdir?=tmp/deps
 sudo?=
 export sudo
 
-lvgl_driver?=sdl
+lvgl_driver?=dummy
 
 
 CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1

@@ -12,10 +12,12 @@
 
 static void hal_init(void); /* see {sdl,...}.c */
 
+#ifdef DIALOG_LVGL_WIDGETS_ENABLED
 #include "widgets/msgbox.h"
 #include "widgets/yesno.h"
 #include "widgets/inputbox.h"
 #include "widgets/checklist.h"
+#endif
 
 
 char * usage(int argc, char ** argv)
@@ -46,16 +48,15 @@ void default_ui_init(int argc, char ** argv)
 Inspired by ncurses dialog, implemented using LVGL\n\
 For help run again with '--help' command option"
     };
+#ifdef DIALOG_LVGL_WIDGETS_ENABLED
     msgbox_ui_init(3, msgbox_argv);
+#endif
 }
 
 
 void ui_init(int argc, char ** argv)
 {
-    lv_obj_set_flex_flow(lv_scr_act(), LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(lv_scr_act(),
-                          LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER,
-                          LV_FLEX_ALIGN_CENTER);
+#ifdef DIALOG_LVGL_WIDGETS_ENABLED
     if((argc >= 1) && (argv[1])) {
         if(strcmp(argv[1], "--msgbox") == 0) {
             msgbox_ui_init(argc, argv);
@@ -76,6 +77,9 @@ void ui_init(int argc, char ** argv)
     else {
         default_ui_init(argc, argv);
     }
+#else
+            default_ui_init(argc, argv);
+#endif
 }
 
 
@@ -92,7 +96,6 @@ int main(int argc, char ** argv)
     ui_init(argc, argv);
 
     while(1) {
-        lv_timer_handler();
         usleep(5 * 1000);
     }
     return 0;
