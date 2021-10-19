@@ -113,7 +113,7 @@ deps/lvgl: ${depsdir}/${lvgl}/lv_conf.h
 
 ${depsdir}/${lvgl}/lv_conf.h: ${depsdir}/${lvgl}/lv_conf_template.h
 	sed \
-	    -e 's|#if 0 .*Set it to "1" to enable the content.*|#if 1 // Enabled manualy|g' \
+	    -e 's|#if 0 .*Set it to "1" to enable.*|#if 1 // Enabled manualy|g' \
 	< $< > $@
 
 ${depsdir}/${lvgl}/lv_conf_template.h:
