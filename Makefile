@@ -40,13 +40,13 @@ height=${width}
 depth?=1
 
 # TODO: Pin upstream URL once released
-lvgl_branch?=master
+lvgl_branch?=release/v7
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
-lvgl_revision?=7b7bed37d3e937c59ec99fccba58774fbf9f1930
+lvgl_revision?=${lvgl_branch}
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
 lv_drivers_branch?=${lvgl_branch}
-lv_drivers_revision?=419a757c23aaa67c676fe3a2196d64808fcf2254
+lv_drivers_revision?=${lv_driver_branch}
 
 depsdir?=tmp/deps
 sudo?=
