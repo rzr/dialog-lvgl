@@ -40,7 +40,7 @@ height=${width}
 depth?=1
 
 # TODO: Pin upstream URL once released
-lvgl_branch?=master
+lvgl_branch?=v8.1.0
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lvgl_revision?=7b7bed37d3e937c59ec99fccba58774fbf9f1930
