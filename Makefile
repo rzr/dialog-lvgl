@@ -38,7 +38,7 @@ width?=42
 height=${width}
 depth?=1
 
-lvgl_branch?=v8.1.0
+lvgl_branch?=v8.2.0
 lvgl_org?=lvgl
 lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lvgl_revision?=${lvgl_branch}
