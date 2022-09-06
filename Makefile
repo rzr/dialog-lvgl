@@ -12,7 +12,6 @@ project?=dialog-${lvgl}
 url?=https://git.ostc-eu.org/rzr/dialog-lvgl
 
 cmake_options?=-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-cmake_options+=-Dinstall:BOOL=ON
 
 exe?=${project}
 sysroot?=${CURDIR}/tmp/sysroot
@@ -52,24 +51,33 @@ depsdir?=tmp/deps
 sudo?=
 export sudo
 
-lvgl_driver?=sdl
+build_type?=release
+export build_type
 
+lvgl_driver?=sdl
+export lvgl_driver
 
 CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1
 
 ifeq (wayland, ${lvgl_driver})
 CFLAGS+=-DUSE_WAYLAND=1
-CFLAGS+=$(shell pkg-config --cflags wayland-client 2> /dev/null || echo -- "")
-CFLAGS+=$(shell pkg-config --cflags xkbcommon 2> /dev/null || echo -- "")
+CFLAGS+=$(shell pkg-config --cflags wayland-client 2> /dev/null || echo "")
+CFLAGS+=$(shell pkg-config --cflags xkbcommon 2> /dev/null || echo "")
 LDLIBS+=-pthread
-LDLIBS+=$(shell pkg-config --libs wayland-client 2> /dev/null || echo -- "-lwayland-client")
-LDLIBS+=$(shell pkg-config --libs xkbcommon 2> /dev/null || echo -- "-lxkbcommon")
+LDLIBS+=$(shell pkg-config --libs wayland-client 2> /dev/null || echo "-lwayland-client")
+LDLIBS+=$(shell pkg-config --libs xkbcommon 2> /dev/null || echo "-lxkbcommon")
+
 endif
 
 ifeq (sdl, ${lvgl_driver})
 CFLAGS+=-DUSE_SDL=1
-CFLAGS+=$(shell pkg-config --cflags sdl2 2> /dev/null || echo -- "")
-LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo -- "-lsdl2")
+CFLAGS+=$(shell pkg-config --cflags sdl2 2> /dev/null || echo "")
+LDLIBS+=$(shell pkg-config --libs sdl2 2> /dev/null || echo "-lsdl2")
+endif
+
+ifeq (debug, ${build_type})
+cmake_options+=-DCMAKE_BUILD_TYPE=DEBUG
+CFLAGS+=-g
 endif
 
 help:
@@ -77,11 +85,14 @@ help:
 	@echo "# Usage:"
 	@echo "#  make deps # will download build in depsdir and install to sysroot"
 	@echo "#  make run # will run demo"
+	@echo "#  make lvgl_driver?=wayland deps run # for wl/weston"
 	@echo "# Env:"
 	@echo "#  depsdir=${depsdir}"
 	@echo "#  sysroot=${sysroot}"
 	@echo "#  libdir=${libdir}"
 	@echo "#  includedir=${includedir}"
+	@echo "#  build_type=${build_type}"
+	@echo "#  lvgl_driver=${lvgl_driver}"
 
 all: help ${exe}
 	ls ${exe}
@@ -207,6 +218,9 @@ setup/debian: /etc/debian_version
 	@echo "error: distro not supported please file a bug: ${url}"
 
 setup: setup/debian
+
+debug:
+	${MAKE} build_type=debug deps run
 
 docker_image?=${project}
 docker_tag?=${project}
