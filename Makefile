@@ -44,7 +44,7 @@ lvgl_url?=https://github.com/${lvgl_org}/lvgl
 lvgl_revision?=${lvgl_branch}
 lv_drivers_url?=https://github.com/${lvgl_org}/lv_drivers
 lv_drivers_branch?=${lvgl_branch}
-lv_drivers_revision?=${lvgl_drivers_revision}
+lv_drivers_revision?=${lvgl_revision}
 
 depsdir?=tmp/deps
 sudo?=
@@ -60,12 +60,14 @@ CFLAGS+=-DLV_CONF_INCLUDE_SIMPLE=1
 
 ifeq (wayland, ${lvgl_driver})
 CFLAGS+=-DUSE_WAYLAND=1
+
 CFLAGS+=$(shell pkg-config --cflags wayland-client 2> /dev/null || echo "")
 CFLAGS+=$(shell pkg-config --cflags xkbcommon 2> /dev/null || echo "")
+CFLAGS+=$(shell pkg-config --cflags wayland-cursor 2> /dev/null || echo "")
 LDLIBS+=-pthread
 LDLIBS+=$(shell pkg-config --libs wayland-client 2> /dev/null || echo "-lwayland-client")
 LDLIBS+=$(shell pkg-config --libs xkbcommon 2> /dev/null || echo "-lxkbcommon")
-
+LDLIBS+=$(shell pkg-config --libs wayland-cursor 2> /dev/null || echo "-lwayland-cursor")
 endif
 
 ifeq (sdl, ${lvgl_driver})
@@ -125,6 +127,7 @@ deps/lvgl: ${depsdir}/${lvgl}/lv_conf.h
 ${depsdir}/${lvgl}/lv_conf.h: ${depsdir}/${lvgl}/lv_conf_template.h
 	sed \
 	    -e 's|#if 0 .*Set it to "1" to enable.*|#if 1 // Enabled manualy|g' \
+	    -e 's|#define LV_MEM_CUSTOM *0|#define LV_MEM_CUSTOM 1 // Enabled manualy|g' \
 	< $< > $@
 
 ${depsdir}/${lvgl}/lv_conf_template.h:
